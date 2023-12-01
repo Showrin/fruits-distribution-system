@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,13 +13,12 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { APP_STATIC_ELEMENTS } from "@/utils/appConfigs";
 import Link from "next/link";
-
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { useRouter } from "next/router";
 
 function FdsAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -92,7 +91,10 @@ function FdsAppBar() {
               }}
             >
               {APP_STATIC_ELEMENTS.NAV_PAGES.map((page) => (
-                <MenuItem key={page.title}>
+                <MenuItem
+                  key={page.title}
+                  selected={router.asPath === page.href}
+                >
                   {
                     <Link href={page.href}>
                       <Typography textAlign="center">{page.title}</Typography>
@@ -133,7 +135,20 @@ function FdsAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {APP_STATIC_ELEMENTS.NAV_PAGES.map((page) => (
               <Link key={page.title} href={page.href}>
-                <Button sx={{ my: 2, color: "white", display: "block", mr: 1 }}>
+                <Button
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "block",
+                    mr: 1,
+                    "&, :hover": {
+                      background:
+                        router.asPath === page.href
+                          ? "rgba(255, 255, 255, 0.2)"
+                          : "transparent",
+                    },
+                  }}
+                >
                   {page.title}
                 </Button>
               </Link>
