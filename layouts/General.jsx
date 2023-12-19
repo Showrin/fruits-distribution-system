@@ -1,14 +1,22 @@
-import FdsAppBar from "@/components/molecules/FdsAppBar";
-import { Box } from "@mui/material";
-import React from "react";
+import AppBarContainer from "@/containers/AppBarContainer";
+import { Box, Container } from "@mui/material";
 
 const General = (props) => {
   const { children } = props;
 
   return (
     <Box>
-      <FdsAppBar />
-      <Box component="main">{children}</Box>
+      <AppBarContainer />
+      <Container
+        component="main"
+        maxWidth="xl"
+        sx={{
+          paddingTop: "40px",
+          paddingBottom: "40px",
+        }}
+      >
+        {children}
+      </Container>
     </Box>
   );
 };

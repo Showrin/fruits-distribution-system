@@ -1,4 +1,5 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import { useContext, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,16 +9,22 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { APP_STATIC_ELEMENTS } from "@/utils/appConfigs";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { ThemeContext } from "@emotion/react";
+import FdsButton from "../atoms/FdsButton";
+import UserContext from "@/contexts/UserContext";
+import { CircularProgress } from "@mui/material";
 
-function FdsAppBar() {
+function FdsAppBar(props) {
+  const { onLogout, isLoggingOut } = props;
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const muiTheme = useContext(ThemeContext);
+  const { user } = useContext(UserContext);
   const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
@@ -35,10 +42,16 @@ function FdsAppBar() {
     setAnchorElUser(null);
   };
 
+  useEffect(() => {
+    if (!user) {
+      setAnchorElUser(null);
+    }
+  }, [user]);
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="transparent">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ color: muiTheme.palette.primary.main }}>
           <Link href={APP_STATIC_ELEMENTS.BASE_URL}>
             <APP_STATIC_ELEMENTS.LOGO
               sx={{
@@ -135,32 +148,49 @@ function FdsAppBar() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {APP_STATIC_ELEMENTS.NAV_PAGES.map((page) => (
               <Link key={page.title} href={page.href}>
-                <Button
+                <FdsButton
                   sx={{
                     my: 2,
-                    color: "white",
                     display: "block",
                     mr: 1,
                     "&, :hover": {
                       background:
                         router.asPath === page.href
-                          ? "rgba(255, 255, 255, 0.2)"
+                          ? muiTheme.palette.primary.light
                           : "transparent",
+                      color:
+                        router.asPath === page.href
+                          ? muiTheme.palette.primary.contrastText
+                          : muiTheme.palette.primary.main,
                     },
                   }}
                 >
                   {page.title}
-                </Button>
+                </FdsButton>
               </Link>
             ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" />
-              </IconButton>
-            </Tooltip>
+            {!user && (
+              <FdsButton
+                variant="outlined"
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login
+              </FdsButton>
+            )}
+            {!!user && (
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user.username}>
+                    {`${user.username[0]}${user.username[1]}`.toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            )}
             <Menu
               sx={{ mt: "45px", ".MuiList-root": { minWidth: "120px" } }}
               id="menu-appbar"
@@ -177,11 +207,25 @@ function FdsAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {APP_STATIC_ELEMENTS.NAV_PROFILE_AVATAR.MENU.ITEMS.map((item) => (
-                <MenuItem key={item.title} onClick={item.onClick}>
-                  <Typography textAlign="center">{item.title}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={() => {
+                  setAnchorElUser(null);
+                  onLogout();
+                }}
+              >
+                <Typography textAlign="center">
+                  Logout{" "}
+                  {isLoggingOut && (
+                    <CircularProgress
+                      sx={{
+                        height: "1em !important",
+                        width: "1em !important",
+                        marginLeft: "8px",
+                      }}
+                    />
+                  )}
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
@@ -189,4 +233,9 @@ function FdsAppBar() {
     </AppBar>
   );
 }
+
+FdsAppBar.propTypes = {
+  isLoggingOut: PropTypes.bool,
+  onLogout: PropTypes.func,
+};
 export default FdsAppBar;
