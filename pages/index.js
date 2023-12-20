@@ -1,6 +1,7 @@
 import Head from "next/head";
-import { Container, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import FruitsContainer from "@/containers/FruitsContainer";
+import FieldsContainer from "@/containers/FieldsContainer";
 
 export default function Home() {
   return (
@@ -12,10 +13,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ marginBottom: "24px" }}>
-          Fruits
-        </Typography>
-        <FruitsContainer />
+        <Grid container={true} spacing={6}>
+          <Grid item={true} xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="h4" sx={{ marginBottom: "24px" }}>
+              Fruits
+            </Typography>
+            <FruitsContainer />
+          </Grid>
+          <Grid item={true} xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="h4" sx={{ marginBottom: "24px" }}>
+              Fields
+            </Typography>
+            <FieldsContainer />
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

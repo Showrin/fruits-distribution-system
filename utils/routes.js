@@ -10,6 +10,10 @@ const routes = {
     list: `${BASE_URL}/fooditems/`,
     book: `${BASE_URL}/fruitbook/`,
   },
+  fields: {
+    list: `${BASE_URL}/field/fieldlist/`,
+    book: `${BASE_URL}/field/book/`,
+  },
 };
 
 export default routes;

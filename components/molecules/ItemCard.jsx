@@ -12,7 +12,10 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import DatePicker from "react-datepicker";
 import UserContext from "@/contexts/UserContext";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const ItemCard = (props) => {
   const {
@@ -21,6 +24,10 @@ const ItemCard = (props) => {
     description,
     price,
     quantity,
+    startDate,
+    endDate,
+    onStartDateChange,
+    onEndDateChange,
     selectedQuantity,
     onBookingButtonClick,
     onAddItem,
@@ -31,28 +38,32 @@ const ItemCard = (props) => {
 
   return (
     <Paper
+      component={Stack}
       sx={{
         padding: "16px",
         boxShadow: muiTheme.shadows[1],
         border: `thin solid ${muiTheme.palette.divider}`,
         overflow: "hidden",
+        height: "100%",
       }}
     >
-      <Box
-        sx={{
-          position: "relative",
-          height: "200px",
-          borderRadius: "inherit",
-          margin: "-16px -16px 0",
-        }}
-      >
-        <Image
-          src={image}
-          alt={name}
-          fill={true}
-          style={{ objectFit: "cover" }}
-        />
-      </Box>
+      {!!image && (
+        <Box
+          sx={{
+            position: "relative",
+            height: "200px",
+            borderRadius: "inherit",
+            margin: "-16px -16px 0",
+          }}
+        >
+          <Image
+            src={image}
+            alt={name}
+            fill={true}
+            style={{ objectFit: "cover" }}
+          />
+        </Box>
+      )}
       <Typography
         component={Stack}
         direction="row"
@@ -61,6 +72,7 @@ const ItemCard = (props) => {
           fontWeight: 600,
           fontSize: "18px",
           marginTop: "16px",
+          flexWrap: "wrap",
         }}
       >
         {name}
@@ -79,6 +91,7 @@ const ItemCard = (props) => {
         variant="subtitle2"
         sx={{
           marginTop: "4px",
+          marginBottom: "16px",
         }}
       >
         {description}
@@ -87,7 +100,8 @@ const ItemCard = (props) => {
         component="div"
         variant="h5"
         sx={{
-          marginTop: "16px",
+          marginTop: "auto",
+          marginBottom: "20px",
           fontWeight: 600,
         }}
       >
@@ -96,11 +110,45 @@ const ItemCard = (props) => {
           per unit
         </Typography>
       </Typography>
+      {(!!onStartDateChange || !!onEndDateChange) && (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            width: "100%",
+            marginBottom: "12px",
+            ".react-datepicker-wrapper": {
+              flexGrow: 1,
+              input: {
+                width: "100%",
+                fontSize: "14px",
+                padding: "4px 8px",
+              },
+            },
+          }}
+        >
+          {onStartDateChange && (
+            <DatePicker
+              placeholderText="Start Date"
+              selected={startDate}
+              onChange={onStartDateChange}
+              dateFormat="yyyy-MM-dd"
+            />
+          )}
+          {onEndDateChange && (
+            <DatePicker
+              placeholderText="End Date"
+              selected={endDate}
+              onChange={onEndDateChange}
+              dateFormat="yyyy-MM-dd"
+            />
+          )}
+        </Stack>
+      )}
       <Stack
         direction="row"
         alignItems="center"
         sx={{
-          marginTop: "20px",
           ".MuiIconButton-root": { borderRadius: "4px" },
         }}
         spacing={1}
@@ -123,7 +171,7 @@ const ItemCard = (props) => {
               onClick={onBookingButtonClick}
               disabled={!user}
             >
-              Book {selectedQuantity} Fruits
+              Book {selectedQuantity} Items
             </Button>
           </Box>
         </Tooltip>
