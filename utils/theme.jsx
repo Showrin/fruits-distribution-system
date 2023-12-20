@@ -14,14 +14,18 @@ export const theme = createTheme({
     //   primary: "#333",
     // },
   },
-  // components: {
-  //   MuiContainer: {
-  //     defaultProps: {
-  //       sx: {
-  //         paddingTop: "16px",
-  //         paddingBottom: "16px",
-  //       },
-  //     },
-  //   },
-  // },
+  components: {
+    MuiTooltip: {
+      defaultProps: {
+        slotProps: {
+          tooltip: {
+            sx: {
+              fontSize: "14px",
+              padding: "8px 16px",
+            },
+          },
+        },
+      },
+    },
+  },
 });

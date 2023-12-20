@@ -6,6 +6,10 @@ const routes = {
     signup: `${BASE_URL}/signup/`,
     logout: `${BASE_URL}/logout/`,
   },
+  fruits: {
+    list: `${BASE_URL}/fooditems/`,
+    book: `${BASE_URL}/fruitbook/`,
+  },
 };
 
 export default routes;
