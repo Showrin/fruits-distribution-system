@@ -25,7 +25,7 @@ const PreviewImageBox = (props) => {
       sx={{
         display: "flex",
         height: "300px",
-        width: "300px",
+        width: "600px",
         backgroundColor: muiTheme.palette.grey[200],
         borderRadius: `${muiTheme.shape.borderRadius.toFixed()}px`,
         cursor: "pointer",
