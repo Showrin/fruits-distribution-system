@@ -14,6 +14,9 @@ const routes = {
     list: `${BASE_URL}/field/fieldlist/`,
     book: `${BASE_URL}/field/book/`,
   },
+  checkDisease: {
+    predict: `${BASE_URL}/prediction/`,
+  },
 };
 
 export default routes;
